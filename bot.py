@@ -155,4 +155,4 @@ async def unmute_error(ctx, error):
 # end unmute error
 
 # client TOKEN
-client.run('NzMzMzE5NTY5MDkwOTM2ODk0.XxCHpQ.ZMP7boEevBpTqJ7L0xwxYkJ-4vA')
+client.run('YOURTOKEN')
