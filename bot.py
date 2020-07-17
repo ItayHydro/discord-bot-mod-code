@@ -1,4 +1,4 @@
-#!/user/bin/python3
+#!/user/bin/python
 
 # importing
 import discord
@@ -8,13 +8,13 @@ import asyncio
 import random
 
 # setting variable and prefix
-client = commands.Bot(command_prefix = '?')
+client = commands.Bot(command_prefix = '-')
 client.remove_command('help')
 
 @client.event
 async def on_ready():
     print("Bot's Online(Checked).")
-    return await client.change_presence(activity=discord.Activity(type=2, name='Tweaking SV Bot'))
+    return await client.change_presence(activity=discord.Activity(type=2, name='Server Guard | -sourcecode'))
 # prints when bot's running well and healthy + changing bot's presence
 
 # start of event num. 2
@@ -45,6 +45,21 @@ async def clear_error(ctx, error):
         await ctx.send('Missing permissions, you have to be administrator to use this.')
 #end of clear error
 
+# creating a command to check if bot is online
+@client.command(pass_context=True)
+@commands.bot_has_permissions(administrator=True)
+async def botcheck(ctx, member):
+    print(f'{member} requested botcheck.') # prints the message on the console
+    await ctx.send('The bot is running healthy') # sending the message in the channel of the server the bot running in.
+# end of botcheck command
+# start of sourcecode command
+@client.command(pass_context=True)
+async def sourcecode(ctx, member):
+    print(f'{member} requested sourcecode of the bot.')
+    await ctx.send('My source code: https://github.com/ItayHydro/discord-bot-mod-code')
+# when a member use 'sourcecode'command, bot will send the message above.
+# end of source code command
+
 # start of userinfo command
 @client.command(pass_context=True)
 @commands.has_permissions(administrator=True)
@@ -67,8 +82,8 @@ async def userinfo(ctx, user: discord.Member):
 @commands.has_permissions(administrator=True)
 async def kick(ctx, member : discord.Member, *, reason=None):
     await member.kick(reason=reason)
-    print(f'Successfully banned {member}.')
-    await ctx.send(f'Successfully banned {member}.')
+    print(f'Successfully kicked {member}.')
+    await ctx.send(f'Successfully kicked {member}.')
 # end of kick command
 
 # start of kick error
@@ -155,4 +170,5 @@ async def unmute_error(ctx, error):
 # end unmute error
 
 # client TOKEN
-client.run('YOURTOKEN')
+client.run('you_wont_see_my_token:)')
+
