@@ -7,7 +7,7 @@ from discord.ext import commands
 import asyncio
 import random
 
-# setting variable and prefix
+# setting up variable and prefix
 client = commands.Bot(command_prefix = '-')
 client.remove_command('help')
 
