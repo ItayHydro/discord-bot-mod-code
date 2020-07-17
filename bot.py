@@ -46,17 +46,17 @@ async def clear_error(ctx, error):
 #end of clear error
 
 # creating a command to check if bot is online
-@client.command(pass_context=True)
+@client.command()
 @commands.bot_has_permissions(administrator=True)
-async def botcheck(ctx, member):
-    print(f'{member} requested botcheck.') # prints the message on the console
+async def botcheck(ctx):
+    print('requested botcheck.') # prints the message on the console
     await ctx.send('The bot is running healthy') # sending the message in the channel of the server the bot running in.
 # end of botcheck command
 # start of sourcecode command
-@client.command(pass_context=True)
-async def sourcecode(ctx, member):
-    print(f'{member} requested sourcecode of the bot.')
-    await ctx.send('My source code: https://github.com/ItayHydro/discord-bot-mod-code')
+@client.command()
+async def sourcecode(ctx):
+    print('requested sourcecode of the bot.')
+    await ctx.send("My source code: https://github.com/ItayHydro/discord-bot-mod-code")
 # when a member use 'sourcecode'command, bot will send the message above.
 # end of source code command
 
