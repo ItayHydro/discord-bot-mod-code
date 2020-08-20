@@ -1,6 +1,6 @@
 #!/user/bin/python
 
-DiscordToken = 'NzMzMzE5NTY5MDkwOTM2ODk0.XxCR4A.J3dRQdycLGwTGXaHgYmG7lHVwIs'
+DiscordToken = 'Token_here'
 
 # importing
 import discord
