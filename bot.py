@@ -1,5 +1,7 @@
 #!/user/bin/python
 
+DiscordToken = 'NzMzMzE5NTY5MDkwOTM2ODk0.XxCR4A.J3dRQdycLGwTGXaHgYmG7lHVwIs'
+
 # importing
 import discord
 from discord.utils import get
@@ -7,20 +9,23 @@ from discord.ext import commands
 import asyncio
 import random
 
-# setting up variable and prefix
+# setting variable and prefix
 client = commands.Bot(command_prefix = '-')
 client.remove_command('help')
 
 @client.event
 async def on_ready():
     print("Bot's Online(Checked).")
-    return await client.change_presence(activity=discord.Activity(type=2, name='Server Guard | -sourcecode'))
-# prints when bot's running well and healthy + changing bot's presence
+    return await client.change_presence(activity=discord.Activity(type=3, name='Server Guard | -sourcecode'))
+# prints whn bot's running well and healthy + changing bot's presence
 
 # start of event num. 2
+memberrole = "Member"
 @client.event
 async def on_member_join(member):
     print(f'{member} Just joined a server')
+    role = get(member.guild.roles, name=memberrole)
+    await member.add_roles(role) # adds the role "Member" when a user joins
 # prints a meessage on console when member join a server
 
 # start of event num. 3
@@ -42,7 +47,7 @@ async def clear(ctx, amount=2):
 @clear.error
 async def clear_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
-        await ctx.send('Missing permissions, you have to be administrator to use this.')
+        await ctx.send('Missing permissions, you have to be an administrator to use this.')
 #end of clear error
 
 # creating a command to check if bot is online
@@ -90,46 +95,37 @@ async def kick(ctx, member : discord.Member, *, reason=None):
 @kick.error
 async def kick_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
-        await ctx.send('Missing permissions, you have to be administrator to use this.')
+        await ctx.send('Missing permissions, you have to be an administrator to use this.')
 # end of kick error
 
-# start of ban command
 @client.command()
 @commands.has_permissions(administrator=True)
 async def ban(ctx, member : discord.Member, *, reason=None):
     await member.ban(reason=reason)
     print(f'Successfully banned {member}.')
     await ctx.send(f'Successfully banned {member}.')
-# out of ban command
 
-# start of ban error
 @ban.error
 async def ban_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
         await ctx.send('Missing permissions, you have to be administrator to use this.')
-# end of ban command
 
-# start of unban command
 @client.command()
-@commands.has_permissions(administrator=True)
 async def unban(ctx, *, member):
     banned_users = await ctx.guild.bans()
     member_name, member_discriminator = member.split('#')
+
     for ban_entry in banned_users:
         user = ban_entry.user
 
         if (user.name, user.discriminator) == (member_name, member_discriminator):
             await ctx.guild.unban(user)
-            await ctx.send(f'Successfully unbanned {user.name}.')
+            await ctx.send(f'Successfully unbanned {user.name}#{user.discriminator}')
             return
-# end of unban command
-
-# start of unban error
 @unban.error
 async def unban_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
         await ctx.send('Missing permissions, you have to be administrator to use this.')
-# end of unban error
 
 # start of mute command
 @client.command()
@@ -140,6 +136,8 @@ async def mute(ctx, member: discord.Member=None):
         return
     role = discord.utils.get(ctx.guild.roles, name="Muted")
     await member.add_roles(role)
+    role2 = discord.utils.get(ctx.guild.roles, name="Member")
+    await member.remove_roles(role2)
     await ctx.send(f'{member} has been mute.')
 # end of mute command
 
@@ -147,7 +145,7 @@ async def mute(ctx, member: discord.Member=None):
 @mute.error
 async def mute_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
-        await ctx.send('Missing permissions, you have to be administrator to use this.')
+        await ctx.send('Missing permissions, you have to be an administrator to use this.')
 # end of mute error
 
 # start of unmute command
@@ -158,7 +156,9 @@ async def unmute(ctx, member: discord.Member=None):
         await ctx.send('Please tag a member to unmute')
         return
     role = discord.utils.get(ctx.guild.roles, name="Muted")
+    role2 = discord.utils.get(ctx.guild.roles, name="Member")
     await member.remove_roles(role)
+    await member.add_roles(role2)
     await ctx.send(f'{member} has been unmuted.')
 # end of unmute command
 
@@ -166,9 +166,30 @@ async def unmute(ctx, member: discord.Member=None):
 @unmute.error
 async def unmute_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
-        await ctx.send('Missing permissions, you have to be administrator to use this.')
+        await ctx.send('Missing permissions, you have to be an administrator to use this.')
 # end unmute error
 
 # client TOKEN
-client.run('you_wont_see_my_token:)')
+client.run(DiscordToken) # the discord's bot token. *token must be private* DO NOT SHARE THIS WITH ANYONE!!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
