@@ -1,6 +1,6 @@
 #!/user/bin/python
 
-DiscordToken = 'Token_here'
+server_guard_token = '542i0-5ri2-jf0--]f2j3-]ofj2'
 
 # importing
 import discord
@@ -25,7 +25,7 @@ memberrole = "Member"
 async def on_member_join(member):
     print(f'{member} Just joined a server')
     role = get(member.guild.roles, name=memberrole)
-    await member.add_roles(role) # adds the role "Member" when a user joins
+    await member.add_roles(role) # adds the role "Member" when a user joins a server
 # prints a meessage on console when member join a server
 
 # start of event num. 3
@@ -36,10 +36,10 @@ async def on_member_remove(member):
 
 # start of clear command
 @client.command()
-@commands.has_permissions(administrator=True)
+@commands.has_permissions(MANAGE_MESSAGES=True)
 async def clear(ctx, amount=2):
     await ctx.channel.purge(limit=amount)
-    print(f'member has Requested to clear {amount} messages.')
+    print(f'Member has Requested to clear {amount} messages.')
     await ctx.send (f'Successfully cleared {amount} messages.', delete_after = 2)
 # end of clear command
 
@@ -47,20 +47,20 @@ async def clear(ctx, amount=2):
 @clear.error
 async def clear_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
-        await ctx.send('Missing permissions, you have to be an administrator to use this.')
+        await ctx.send('Missing permissions, sorry! you must to be an administrator to use the clear command.')
 #end of clear error
 
 # creating a command to check if bot is online
 @client.command()
 @commands.bot_has_permissions(administrator=True)
 async def botcheck(ctx):
-    print('requested botcheck.') # prints the message on the console
+    print('Requested botcheck command.') # prints the message on the console
     await ctx.send('The bot is running healthy') # sending the message in the channel of the server the bot running in.
 # end of botcheck command
 # start of sourcecode command
 @client.command()
 async def sourcecode(ctx):
-    print('requested sourcecode of the bot.')
+    print('Requested sourcecode of the bot.')
     await ctx.send("My source code: https://github.com/ItayHydro/discord-bot-mod-code")
 # when a member use 'sourcecode'command, bot will send the message above.
 # end of source code command
@@ -76,15 +76,23 @@ async def userinfo(ctx, user: discord.Member):
     embed.add_field(name="Account created at", value=user.created_at.strftime("%a, %#d %b %Y, %I:%M %p UTC"))
     embed.add_field(name="Joined server at", value=user.joined_at.strftime("%a, %#d %b %Y, %I:%M %p UTC"))
     embed.add_field(name="Highest role", value=user.top_role)
-    embed.add_field(name="Is the user bot", value=user.bot)
+    embed.add_field(name="Is the user a bot", value=user.bot)
 
     embed.set_thumbnail(url=user.avatar_url)
     await ctx.send( embed = embed)
+    print('Requested userinfo command.')
+# end of userinfo command
+
+# start of userinfo error
+@userinfo.error
+async def userinfo_error(ctx, error):
+    if isinstance(error, commands.CheckFailure):
+        await ctx.send('Missing permissions, sorry! you must to be an administrator to use the userinfo command.')
 # end of userinfo command
 
 # start of kick command
 @client.command()
-@commands.has_permissions(administrator=True)
+@commands.has_permissions(KICK_MEMBERS=True)
 async def kick(ctx, member : discord.Member, *, reason=None):
     await member.kick(reason=reason)
     print(f'Successfully kicked {member}.')
@@ -95,11 +103,11 @@ async def kick(ctx, member : discord.Member, *, reason=None):
 @kick.error
 async def kick_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
-        await ctx.send('Missing permissions, you have to be an administrator to use this.')
+        await ctx.send('Missing permissions, sorry! you must to be an administrator to use the kick command.')
 # end of kick error
 
 @client.command()
-@commands.has_permissions(administrator=True)
+@commands.has_permissions(BAN_MEMBERS=True)
 async def ban(ctx, member : discord.Member, *, reason=None):
     await member.ban(reason=reason)
     print(f'Successfully banned {member}.')
@@ -108,9 +116,10 @@ async def ban(ctx, member : discord.Member, *, reason=None):
 @ban.error
 async def ban_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
-        await ctx.send('Missing permissions, you have to be administrator to use this.')
+        await ctx.send('Missing permissions, sorry! you must to be an administrator to use the ban command.')
 
 @client.command()
+@commands.has_permissions(BAN_MEMBERS=True)
 async def unban(ctx, *, member):
     banned_users = await ctx.guild.bans()
     member_name, member_discriminator = member.split('#')
@@ -121,15 +130,16 @@ async def unban(ctx, *, member):
         if (user.name, user.discriminator) == (member_name, member_discriminator):
             await ctx.guild.unban(user)
             await ctx.send(f'Successfully unbanned {user.name}#{user.discriminator}')
+            print(f'Successfully unbanned {member}.')
             return
 @unban.error
 async def unban_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
-        await ctx.send('Missing permissions, you have to be administrator to use this.')
+        await ctx.send('Missing permissions, sorry! you must to be an administrator to use the unban command.')
 
 # start of mute command
 @client.command()
-@commands.has_permissions(administrator=True)
+@commands.has_permissions(MUTE_MEMBERS=True)
 async def mute(ctx, member: discord.Member=None):
     if not member:
         await ctx.send("Please tag a member to mute")
@@ -138,19 +148,20 @@ async def mute(ctx, member: discord.Member=None):
     await member.add_roles(role)
     role2 = discord.utils.get(ctx.guild.roles, name="Member")
     await member.remove_roles(role2)
-    await ctx.send(f'{member} has been mute.')
+    await ctx.send(f'{member} has been muted.')
+    print(f'member {member} has been muted.')
 # end of mute command
 
 # start of mute error
 @mute.error
 async def mute_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
-        await ctx.send('Missing permissions, you have to be an administrator to use this.')
+        await ctx.send('Missing permissions, sorry! you must to be an administrator to use the mute command.')
 # end of mute error
 
 # start of unmute command
 @client.command()
-@commands.has_permissions(administrator=True)
+@commands.has_permissions(MUTE_MEMBERS=True)
 async def unmute(ctx, member: discord.Member=None):
     if not member:
         await ctx.send('Please tag a member to unmute')
@@ -160,17 +171,18 @@ async def unmute(ctx, member: discord.Member=None):
     await member.remove_roles(role)
     await member.add_roles(role2)
     await ctx.send(f'{member} has been unmuted.')
+    print(f'member {member} has been unmuted.')
 # end of unmute command
 
 # start unmute error
 @unmute.error
 async def unmute_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
-        await ctx.send('Missing permissions, you have to be an administrator to use this.')
+        await ctx.send('Missing permissions, sorry! you must to be an administrator to use the unmute command.')
 # end unmute error
 
 # client TOKEN
-client.run(DiscordToken) # the discord's bot token. *token must be private* DO NOT SHARE THIS WITH ANYONE!!!
+client.run(server_guard_token) # the discord's bot token. *token must be private* DO NOT SHARE THIS WITH ANYONE!!!
 
 
 
